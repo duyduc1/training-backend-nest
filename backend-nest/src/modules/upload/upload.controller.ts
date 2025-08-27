@@ -10,35 +10,35 @@ export class UploadController {
 
   @Post()
   @UseInterceptors(FileInterceptor('image'))
-  create(
+  async create(
     @Body() creaeUploadDto: CreateUploadDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    return this.uploadService.uploadFile(creaeUploadDto, file);
+    return await this.uploadService.uploadFile(creaeUploadDto, file);
   }
 
   @Get()
-  findAll() {
-    return this.uploadService.findAll();
+  async findAll() {
+    return await this.uploadService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.uploadService.findOne(id);
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return await this.uploadService.findOne(id);
   }
 
   @Put(':id')
   @UseInterceptors(FileInterceptor('image')) 
-  update(
+  async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUploadDto: UpdateUploadDto,
     @UploadedFile() file?: Express.Multer.File,
   ) {
-    return this.uploadService.updateFile(id, updateUploadDto, file);
+    return await this.uploadService.updateFile(id, updateUploadDto, file);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.uploadService.removeFile(id);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    return await this.uploadService.removeFile(id);
   }
 }
