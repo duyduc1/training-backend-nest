@@ -9,7 +9,7 @@ import { UsersService } from '../users/users.service';
 import { JwtStrategy } from './jwt.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailService } from 'src/shared/mail.service';
-import { GoogleStrategy } from 'src/shared/google.strategy';
+import { GoogleStrategy } from 'src/modules/auth/google.strategy';
 
 @Module({
   imports: [

@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { ProductsModule } from './modules/products/products.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
+import { ExcelModule } from './modules/excel/excel.module';
 import databaseConfig from './config/database.config';
 
 @Module({
@@ -26,6 +27,7 @@ import databaseConfig from './config/database.config';
     ProductsModule,
     AuthModule,
     UsersModule,
+    ExcelModule
   ],
   controllers: [AppController],
   providers: [AppService],

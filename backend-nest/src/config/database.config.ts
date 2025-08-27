@@ -1,4 +1,3 @@
-// src/config/database.config.ts
 import { registerAs } from '@nestjs/config';
 
 export default registerAs('database', () => ({
@@ -9,5 +8,5 @@ export default registerAs('database', () => ({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   entities: [__dirname + '/../modules/**/*.entity{.ts,.js}'],
-  synchronize: true, // ⚠️ chỉ dùng cho dev, tránh dùng trên production
+  synchronize: true, 
 }));
