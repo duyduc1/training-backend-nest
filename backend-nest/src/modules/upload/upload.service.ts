@@ -39,8 +39,35 @@ export class UploadService {
     return this.uploadRepository.save(newFile);
   }
 
-  findAll() {
-    return this.uploadRepository.find();
+
+  async findAll(query: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  }) {
+    const { page = 1, limit = 10, search } = query;
+    const qb = this.uploadRepository.createQueryBuilder('uploads');
+
+    if (search) {
+      qb.andWhere('(uploads.nameUpload LIKE :search OR uploads.description:search)', {
+        search: `%${search}%`
+      })
+    }
+
+    
+    qb.skip((page - 1) * limit).take(limit);
+
+    qb.orderBy('uploads.createdAt', 'DESC');
+
+    const [data, total] = await qb.getManyAndCount();
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async findOne(id: number) {

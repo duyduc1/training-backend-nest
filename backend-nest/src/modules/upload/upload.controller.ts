@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ParseIntPipe, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ParseIntPipe, Put, Query } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadService } from './upload.service';
 import { CreateUploadDto } from './dto/create-upload.dto';
@@ -18,8 +18,12 @@ export class UploadController {
   }
 
   @Get()
-  async findAll() {
-    return await this.uploadService.findAll();
+  async findAll(
+    @Query('page') page?: number,
+    @Query('limit') limit?: number,
+    @Query('search') search?: string,
+  ) {
+    return await this.uploadService.findAll({ page, limit, search});
   }
 
   @Get(':id')
@@ -42,7 +46,7 @@ export class UploadController {
     return await this.uploadService.removeFile(id);
   }
 
-  @Delete(':id/softdelete')
+  @Delete('softdelete/:id')
   async softDeleteFile(@Param('id') id: number) {
     return await this.softDeleteFile(id);
   }

@@ -1,5 +1,6 @@
 import { 
-  Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Put, UseGuards 
+  Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Put, UseGuards, 
+  Query
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -21,8 +22,12 @@ export class ProductsController {
   }
 
   @Get()
-  async findAllProducts() {
-    return await this.productsService.findAll();
+  async findAllProducts(
+    @Query('page') page?: number,
+    @Query('limit') limit?: number,
+    @Query('search') search?: string,
+  ) {
+    return await this.productsService.findAll({ page, limit, search});
   }
 
   @Get(':id')
@@ -49,7 +54,7 @@ export class ProductsController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
-  @Delete(':id/softdelete')
+  @Delete('softdelete/:id')
   async softDeleteUser(@Param('id', ParseIntPipe) id: number) {
     return await this.productsService.softDeleteProduct(id);
   }

@@ -46,7 +46,7 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
-  @Delete(':id/softdelete')
+  @Delete('softdelete/:id')
   async softDelete(@Param('id') id: number) {
     return await this.usersService.softDeleteUser(id);
   }

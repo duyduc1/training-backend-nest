@@ -18,8 +18,34 @@ export class ProductsService {
     return { message: "Product create successfull", newProduct}
   }
 
-  findAll() {
-    return this.productRepository.find();
+  async findAll(query: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  }) {
+    const { page = 1, limit = 10, search} = query;
+
+    const qb = this.productRepository.createQueryBuilder('products');
+
+    if (search) {
+      qb.andWhere('(products.productName LIKE :search OR products.price LIKE :search)', {
+        search: `%${search}`,
+      });
+    }
+
+    qb.skip((page - 1) * limit).take(limit);
+
+    qb.orderBy('products.createdAt', 'DESC');
+
+    const [data, total] = await qb.getManyAndCount();
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit)
+    }
   }
 
   async findOne(id: number) {
