@@ -46,4 +46,11 @@ export class ProductsController {
   async deleteProduct(@Param('id', ParseIntPipe) id: number) {
     return await this.productsService.removeProduct(id);
   }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  @Delete(':id/softdelete')
+  async softDeleteUser(@Param('id', ParseIntPipe) id: number) {
+    return await this.productsService.softDeleteProduct(id);
+  }
 }

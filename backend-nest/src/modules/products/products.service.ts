@@ -45,4 +45,13 @@ export class ProductsService {
     const deleteProduct = await this.findOne(id);
     return this.productRepository.remove(deleteProduct);
   }
+
+  async softDeleteProduct(id: number) {
+    const result = await this.productRepository.softDelete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Product with ID ${id} not found`)
+    }
+    
+    return { message: 'Product was soft deleted'}
+  }
 }

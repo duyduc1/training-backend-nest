@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { v2 as cloudinary } from 'cloudinary';
 import { Upload } from './entities/upload.entity';
 import { CreateUploadDto } from './dto/create-upload.dto';
@@ -74,5 +74,14 @@ export class UploadService {
   async removeFile(id: number) {
     const file = await this.findOne(id);
     return this.uploadRepository.remove(file);
+  }
+
+  async softDeleteFile(id: number) {
+    const resutl = await this.uploadRepository.softDelete(id);
+    if (resutl.affected === 0 ) {
+      throw new NotFoundException(`File with ID ${id} not found`)
+    }
+
+    return { message: 'File was soft deleted'}
   }
 }

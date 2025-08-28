@@ -41,4 +41,9 @@ export class UploadController {
   async remove(@Param('id', ParseIntPipe) id: number) {
     return await this.uploadService.removeFile(id);
   }
+
+  @Delete(':id/softdelete')
+  async softDeleteFile(@Param('id') id: number) {
+    return await this.softDeleteFile(id);
+  }
 }

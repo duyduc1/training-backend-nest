@@ -53,7 +53,6 @@ export class UsersService {
     };
   }
 
-
   async findOne(id: number) {
     const user = await this.usersRepository.findOneBy({ id });
     if (!user) {
@@ -76,6 +75,15 @@ export class UsersService {
   async remove(id: number) {
     const deletedUser = await this.findOne(id);
     return this.usersRepository.remove(deletedUser);
+  }
+
+  async softDeleteUser(id: number) {
+    const result = await this.usersRepository.softDelete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`User with ID ${id} not found`)
+    }
+
+    return { message: 'User was soft deleted' };
   }
 
   async findOneBy(conditions: Partial<User>) {
