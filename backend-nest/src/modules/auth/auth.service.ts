@@ -11,7 +11,7 @@ import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { Role } from 'src/enum/role.enum';
-import { MailService } from 'src/shared/mail.service';
+import { MailService } from 'src/shared/mailer/mail.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../users/entities/user.entity';
 

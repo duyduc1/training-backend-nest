@@ -8,7 +8,7 @@ import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { JwtStrategy } from '../../strategy/jwt.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { MailService } from 'src/shared/mail.service';
+import { MailService } from 'src/shared/mailer/mail.service';
 import { GoogleStrategy } from 'src/strategy/google.strategy';
 
 @Module({
