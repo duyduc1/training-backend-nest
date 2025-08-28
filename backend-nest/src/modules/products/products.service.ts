@@ -38,13 +38,11 @@ export class ProductsService {
     if (!productUpdate) {
       throw new NotFoundException(`Product With ID #${id} not found`);
     }
-    await this.productRepository.save(productUpdate);
-    return { message: 'Product was updated', productUpdate }
+    return this.productRepository.save(productUpdate);
   }
 
   async removeProduct(id: number) {
     const deleteProduct = await this.findOne(id);
-    await this.productRepository.remove(deleteProduct);
-    return { message: 'Product deleted successfully' };
+    return this.productRepository.remove(deleteProduct);
   }
 }

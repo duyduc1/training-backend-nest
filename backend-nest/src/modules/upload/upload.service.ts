@@ -34,7 +34,7 @@ export class UploadService {
     const uploadFile = await this.uploadImageToCloudinary(file);
     const newFile = this.uploadRepository.create({
       ...createUploadDto,
-      ImageUrl: uploadFile,
+      imageUrl: uploadFile,
     });
     return this.uploadRepository.save(newFile);
   }
@@ -58,14 +58,14 @@ export class UploadService {
   ) {
     const fileUpdate = await this.findOne(id);
 
-    let imageUrl = fileUpdate.ImageUrl;
+    let imageUrl = fileUpdate.imageUrl;
     if (file) {
       imageUrl = await this.uploadImageToCloudinary(file);
     }
     
     const updateFile = this.uploadRepository.merge(fileUpdate, {
       ...updateUploadDto,
-      ImageUrl: imageUrl,
+      imageUrl: imageUrl,
     });
 
     return this.uploadRepository.save(updateFile);

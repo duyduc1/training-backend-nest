@@ -1,5 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm";
-import { Role } from "../role.enum";
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from "typeorm";
+import { Role } from "src/enum/role.enum";
 import { Exclude } from 'class-transformer';
 
 @Entity()
@@ -8,35 +8,39 @@ export class User {
     id: number;
 
     @Column()
-    Username: string;
+    username: string;
 
     @Exclude()
     @Column()
-    Password: string;
+    password: string;
 
     @Column()
-    NumberPhone: number;
+    numberPhone: number;
 
     @Column()
-    Email: string;
+    email: string;
 
     @Column({
         type: 'enum',
         enum: Role,
         default: Role.USER,
     })
-    Role: Role;
+    role: Role;
     
     @Column({ type: 'varchar', length: 255, nullable: true, default: null })
     resetToken: string;
 
-    @Column({ type: 'datetime', nullable: true, default: null })
+    @Column({ type: 'timestamp', nullable: true, default: null })
     resetTokenExpiration: Date;
 
-    @CreateDateColumn()
+    @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
     createdAt: Date;
 
-    @UpdateDateColumn()
-    lastModifiedAt: Date; 
+    @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
+    updatedAt: Date;
+
+
+    @DeleteDateColumn({ type: 'timestamp', name: 'deleted_at', nullable: true })
+    deletedAt?: Date;
     
 }

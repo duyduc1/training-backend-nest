@@ -8,7 +8,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { ExcelModule } from './modules/excel/excel.module';
 import { UploadModule } from './modules/upload/upload.module';
-import { CloudinaryModule } from './config/cloudinary/cloudinary.module';
+import { CloudinaryModule } from './config/cloudinary.module';
 import databaseConfig from './config/database.config';
 
 @Module({

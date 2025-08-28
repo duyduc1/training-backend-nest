@@ -1,16 +1,32 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { 
+  Entity, 
+  Column, 
+  PrimaryGeneratedColumn, 
+  CreateDateColumn, 
+  UpdateDateColumn, 
+  DeleteDateColumn 
+} from 'typeorm';
 
-@Entity()
+@Entity({ name: 'uploads' })
 export class Upload {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    NameUpload: string;
+  @Column()
+  nameUpload: string;
 
-    @Column({ nullable: true })
-    Description: string;
+  @Column({ nullable: true })
+  description: string;
 
-    @Column({ nullable: true })
-    ImageUrl: string
+  @Column({ nullable: true })
+  imageUrl: string;
+
+  @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
+  updatedAt: Date;
+
+  @DeleteDateColumn({ type: 'timestamp', name: 'deleted_at', nullable: true })
+  deletedAt?: Date;
 }

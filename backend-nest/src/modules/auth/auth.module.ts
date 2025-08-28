@@ -6,10 +6,10 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
-import { JwtStrategy } from './jwt.strategy';
+import { JwtStrategy } from '../../strategy/jwt.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailService } from 'src/shared/mail.service';
-import { GoogleStrategy } from 'src/modules/auth/google.strategy';
+import { GoogleStrategy } from 'src/strategy/google.strategy';
 
 @Module({
   imports: [

@@ -3,9 +3,9 @@ import { IsNotEmpty, IsOptional, IsString } from "class-validator";
 export class CreateUploadDto {
     @IsString()
     @IsNotEmpty()
-    NameUpload: string;
+    nameUpload: string;
 
     @IsOptional()
     @IsString()
-    Description: string;
+    description: string;
 }

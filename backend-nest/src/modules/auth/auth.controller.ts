@@ -23,7 +23,7 @@ export class AuthController {
 
   @Post('forgot-password')
   async forgotPassword(@Body() dto: ForgotPasswordDto) {
-    return this.authService.forgotPassword(dto.Email);
+    return this.authService.forgotPassword(dto.email);
   }
 
   @Post('reset-password')
