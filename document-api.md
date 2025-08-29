@@ -4,12 +4,16 @@
 ``` bash 
 backend-nest/
 ├── src/
-│   ├── config/                              # Các cấu hình hệ thống
-│   │   ├── cloudinary/                      # Cấu hình Cloudinary (upload file)
-│   │   │   ├── cloudinary.module.ts
-│   │   │   ├── cloudinary.provider.ts
-│   │   └── database.config.ts               # Cấu hình TypeORM, database
+│   ├── config/                              # Các cấu hình hệ thống               
+│   │   ├── database.config.ts               # Cấu hình TypeORM, database
+│   │   └── s3.config.ts                     
 │   │
+│   ├── decorators/ 
+│   │   └── roles.decorator.ts
+│   ├── enum/
+│   │   └── role.module.ts
+│   ├── guard/    
+│   │   └── roles.guard.ts    
 │   ├── modules/                             # Các module chính
 │   │   ├── auth/                            # Xác thực & phân quyền
 │   │   │   ├── dto/                         # Data Transfer Objects cho Auth
@@ -64,6 +68,18 @@ backend-nest/
 │   │       ├── users.module.ts
 │   │       └── users.service.ts
 │   │
+│   ├── shared/
+│   │   ├── cloudinary/
+│   │   │   ├── cloudinary.module.ts
+│   │   │   └── cloudinary.provider.ts
+│   │   ├── mailer/
+│   │   │   └── mail.service.ts
+│   │   ├── s3/
+│   │   │   ├── s3.module.ts
+│   │   │   └── s3.provider.ts
+│   ├── strategy/      
+│   │   ├── goole.strategy.ts
+│   │   └── jwt.strategy.ts
 │   ├── app.controller.spec.ts               
 │   ├── app.controller.ts               
 │   ├── app.module.ts              
@@ -78,6 +94,7 @@ backend-nest/
 ├── nest-cli.json
 ├── package.json
 ├── package-lock.json
+├── README.md
 ├── tsconfig.json
 ├── tsconfig.build.json
 ```
