@@ -92,7 +92,7 @@ npm run start:dev
 # 1. Tạo tài khoản, đăng nhập tài khoản và generate jwt
 
 ## 1. Register User
-### Endpoint: POST /api/auth/register
+### Endpoint: POST /api/v1/auth/register
 ### Request Body
 
 ``` json
@@ -126,7 +126,7 @@ npm run start:dev
 
 ## 2. Login User
 
-### Endpoint: POST /api/auth/login
+### Endpoint: POST /api/v1/auth/login
 ### Request Body
 
 ``` json 
@@ -173,11 +173,11 @@ npm run dev
 ```
 
 ## 1. Flow hoạt động
-1. Frontend NextJS select tới Endpoint http://localhost:3001/auth/login bấm nút "Login with Google" → gọi API GET /api/auth/google.
+1. Frontend NextJS select tới Endpoint http://localhost:3001/auth/login bấm nút "Login with Google" → gọi API GET /api/v1/auth/google.
 
-2. API GET /api/auth/google → Passport chuyển hướng sang trang đăng nhập Google (scope: ["profile", "email"]).
+2. API GET /api/v1/auth/google → Passport chuyển hướng sang trang đăng nhập Google (scope: ["profile", "email"]).
 
-3. Sau khi user đồng ý → Google trả về thông tin (profile, email…) qua API callback GET /api/auth/google/callback
+3. Sau khi user đồng ý → Google trả về thông tin (profile, email…) qua API callback GET /api/v1/auth/google/callback
 
 4. Trong passport:
 - Lấy email từ Google.
@@ -194,7 +194,7 @@ http://localhost:3001?token=<jwt_token>
 # 3. Gửi email
 
 ## 1. Forgot Password (Yêu cầu đặt lại mật khẩu)
-### Endpoint: POST /api/auth/forgot-password
+### Endpoint: POST /api/v1/auth/forgot-password
 ### Request Body
 
 ``` json 
@@ -224,7 +224,7 @@ http://localhost:3001?token=<jwt_token>
 
 5. Tạo reset link
 ``` bash
-http://localhost:3000/api/auth/reset-password?token=abcxyz...
+http://localhost:3000/api/v1/auth/reset-password?token=abcxyz...
 ```
 
 6. Gửi email cho user
@@ -237,7 +237,7 @@ http://localhost:3000/api/auth/reset-password?token=abcxyz...
 
 ## 2. Reset Password (Đặt lại mật khẩu mới)
 
-### Endpoint: POST /api/auth/reset-password?token=<reset_token>
+### Endpoint: POST /api/v1/auth/reset-password?token=<reset_token>
 ### Request Body
 ``` json
 {
@@ -288,16 +288,16 @@ http://localhost:3000/api/auth/reset-password?token=abcxyz...
 # 4. Upload file
 
 ## 4.1 Upload File
-### Endpoint: POST /api/upload
+### Endpoint: POST /api/v1/upload
 ### Request (Form-Data)
 ``` bash
-Field	            Type	              Description
+Key	                Value	              Description
 ──────────────────────────────────────────────────────
 NameUpload	        text	              Tiêu đề file
 ──────────────────────────────────────────────────────
 Description	        text	              Mô tả file
 ──────────────────────────────────────────────────────
-file	        	File                  ảnh upload (Cloudinary sẽ lưu)
+file	        	    File                ảnh upload (Cloudinary sẽ lưu)
 ```
 
 ### Response (200 OK)
@@ -312,7 +312,7 @@ file	        	File                  ảnh upload (Cloudinary sẽ lưu)
 ```
 
 ## 4.2 Get All Files
-### Endpoint: GET /api/upload
+### Endpoint: GET /api/v1/upload
 ### Response (200 OK)
 
 ``` json 
@@ -333,7 +333,7 @@ file	        	File                  ảnh upload (Cloudinary sẽ lưu)
 ```
 
 ## 4.3 Get File By ID
-### Endpoint: GET /api/upload/:id
+### Endpoint: GET /api/v1/upload/:id
 ### Response (200 OK)
 ``` json
 {
@@ -345,7 +345,7 @@ file	        	File                  ảnh upload (Cloudinary sẽ lưu)
 ```
 
 ## 4.4 Update File (Title & Description)
-### Endpoint: PUT /api/upload/:id
+### Endpoint: PUT /api/v1/upload/:id
 ### Request Body (JSON)
 ``` json
 {
@@ -365,7 +365,7 @@ file	        	File                  ảnh upload (Cloudinary sẽ lưu)
 ```
 
 ## 4.5 Delete File
-### Endpoint: DELETE /api/upload/:id
+### Endpoint: DELETE /api/v1/upload/:id
 ### Response (200 OK)
 ``` json
 {
@@ -376,9 +376,58 @@ file	        	File                  ảnh upload (Cloudinary sẽ lưu)
 }
 ```
 
+## 4.6 UploadFile với S3 aws (upload 1 file)
+### Endpoint: POST /api/v1/upload/singles3
+### Request (Form-Data)
+``` bash
+Key	              Value	                             Description
+────────────────────────────────────────────────────────────────────────────
+file	        	  chọn ảnh cần upload                ảnh upload (s3 sẽ lưu)
+```
+
+### Response (200 OK)
+
+``` json 
+{
+    "url": "https://your-bucket-name.s3.ap-northeast-1.amazonaws.com/xxxx-xxxx-xxxx-your-file-name.jpg"
+}
+```
+
+## 4.7 UploadFile với S3 aws (upload nhiều files)
+### Endpoint: POST /api/v1/upload/singles3
+### Request (Form-Data)
+``` bash
+Key	              Value	                             Description
+────────────────────────────────────────────────────────────────────────────
+files	        	  chọn ảnh cần 1                     ảnh upload (s3 sẽ lưu)
+────────────────────────────────────────────────────────────────────────────
+files	        	  chọn ảnh cần 2                     ảnh upload (s3 sẽ lưu)
+────────────────────────────────────────────────────────────────────────────
+files	        	  chọn ảnh cần 3                     ảnh upload (s3 sẽ lưu)
+```
+
+### Response (200 OK)
+
+``` json 
+{
+    "urls": "https://your-bucket-name.s3.ap-northeast-1.amazonaws.com/xxxx-xxxx-xxxx-your-file-name.jpg",
+    "urls": "https://your-bucket-name.s3.ap-northeast-1.amazonaws.com/xxxx-xxxx-xxxx-your-file-name.jpg",
+    "urls": "https://your-bucket-name.s3.ap-northeast-1.amazonaws.com/xxxx-xxxx-xxxx-your-file-name.jpg"
+}
+```
+
+## ✅ Xác minh kết quả trên S3
+- Cách chắc chắn nhất để biết bạn đã thành công là kiểm tra trực tiếp trên S3:
+
+- Đăng nhập vào AWS Management Console.
+
+- Đi đến dịch vụ S3.
+
+- Mở bucket của bạn và kiểm tra xem các file mới (thường có một chuỗi UUID ở đầu tên) đã xuất hiện hay chưa.
+
 # 5. Đọc, ghi file excel
 ## 1. Upload & đọc dữ liệu từ file Excel
-### Endpoint: POST /api/excel/import
+### Endpoint: POST /api/v1/excel/import
 
 ### Request:
 
@@ -407,7 +456,7 @@ Value: sample.xlsx
 ```
 
 ## 2. Export Excel
-### Endpoint: POST /api/excel/export
+### Endpoint: POST /api/v1/excel/export
 
 ### Request:
 
@@ -432,7 +481,7 @@ Value: sample.xlsx
 # 6. API CURD có kết nối Database MySQL
 
 ## 6.1 Lấy danh sách sản phẩm
-### Endpoint: GET /api/products
+### Endpoint: GET /api/v1/products
 ### Response 200 (OK)
 
 ``` json
@@ -452,8 +501,8 @@ Value: sample.xlsx
 ]
 ```
 ## 6.2 Lấy sản phẩm theo ID
-### Endpoint: GET /api/products/:id
-### Request Example: GET /api/products/1
+### Endpoint: GET /api/v1/products/:id
+### Request Example: GET /api/v1/products/1
 ### Response 200 (OK):
 ``` json
 {
@@ -474,8 +523,8 @@ Value: sample.xlsx
 Authorization: Bearer <your_token>
 ```
 
-### Endpoint: POST /api/products
-### Request Example: POST /api/products
+### Endpoint: POST /api/v1/products
+### Request Example: POST /api/v1/products
 ### request body
 ``` json 
 {
@@ -508,8 +557,8 @@ Authorization: Bearer <your_token>
 Authorization: Bearer <your_token>
 ```
 
-### Request Example: PUT /api/products/:id
-### Endpoint: PUT /api/products/1
+### Request Example: PUT /api/v1/products/:id
+### Endpoint: PUT /api/v1/products/1
 ### request body
 ``` json
 {
@@ -541,8 +590,8 @@ Authorization: Bearer <your_token>
 Authorization: Bearer <your_token>
 ```
 
-### Request Example: /api/products/:id
-### Endpoint: DELETE /api/products/1
+### Request Example: /api/v1/products/:id
+### Endpoint: DELETE /api/v1/products/1
 ### Response (200 OK)
 ``` json
 {
@@ -552,12 +601,12 @@ Authorization: Bearer <your_token>
 
 ### Tóm lại:
 
-- GET /api/products → Lấy tất cả sản phẩm
+- GET /api/v1/products → Lấy tất cả sản phẩm
 
-- GET /api/products/:id → Lấy 1 sản phẩm theo ID
+- GET /api/v1/products/:id → Lấy 1 sản phẩm theo ID
 
-- POST /api/products → Thêm sản phẩm mới
+- POST /api/v1/products → Thêm sản phẩm mới
 
-- PUT /api/products/:id → Cập nhật sản phẩm
+- PUT /api/v1/products/:id → Cập nhật sản phẩm
 
-- DELETE /api/products/:id → Xóa sản phẩm
+- DELETE /api/v1/products/:id → Xóa sản phẩm
