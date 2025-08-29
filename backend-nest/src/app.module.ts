@@ -10,13 +10,14 @@ import { ExcelModule } from './modules/excel/excel.module';
 import { UploadModule } from './modules/upload/upload.module';
 import { CloudinaryModule } from './shared/cloudinary/cloudinary.module';
 import databaseConfig from './config/database.config';
+import s3Config from './config/s3.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
-      load: [databaseConfig], 
+      load: [databaseConfig, s3Config], 
     }),
 
     TypeOrmModule.forRootAsync({

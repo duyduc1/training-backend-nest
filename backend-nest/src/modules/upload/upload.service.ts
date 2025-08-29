@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Inject, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Not, Repository } from 'typeorm';
 import { v2 as cloudinary } from 'cloudinary';
@@ -6,13 +6,60 @@ import { Upload } from './entities/upload.entity';
 import { CreateUploadDto } from './dto/create-upload.dto';
 import { UpdateUploadDto } from './dto/update-upload.dto';
 import { Readable } from 'stream';
+import { ConfigService } from '@nestjs/config';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3_CLIENT } from 'src/shared/s3/s3.provider';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UploadService {
+  private readonly logger = new Logger(UploadService.name);
+  private readonly bucketName: string;
+
   constructor(
+    @Inject(S3_CLIENT) private readonly s3Client: S3Client,
+    private readonly configService: ConfigService,
+
     @InjectRepository(Upload)
     private uploadRepository: Repository<Upload>,
-  ) {}
+  ) {
+    const bucket = this.configService.get<string>('s3.bucket');
+    if(!bucket) {
+      throw new Error('S3 bucket name is not configured, Check your .env file');
+    }
+    this.bucketName = bucket;
+  }
+  async uploadFileS3(file: Express.Multer.File): Promise<{ url: string }> {
+    const fileName = `${uuidv4()}-${file.originalname}`;
+    
+    const command = new PutObjectCommand({
+      Bucket: this.bucketName,
+      Key: fileName,
+      Body: file.buffer,
+      ContentType: file.mimetype,
+    });
+
+    try {
+      await this.s3Client.send(command);
+      const region = await this.s3Client.config.region();
+      const fileUrl = `https://${this.bucketName}.s3.${region}.amazonaws.com/${fileName}`;
+
+      this.logger.log(`File uploaded successfully: ${fileUrl}`);
+      return { url: fileUrl };
+    } catch (error) {
+      this.logger.error('Failed to upload file to S3', error);
+      throw new Error('Failed to upload file.');
+    }
+  }
+
+  async uploadFiles(files: Express.Multer.File[]): Promise<{ urls: string[] }> {
+    const uploadPromises = files.map(file => this.uploadFileS3(file));
+    const results = await Promise.all(uploadPromises);
+
+    const urls = results.map(result => result.url);
+    this.logger.log(`All ${files.length} files uploaded successfully`);
+    return { urls };
+  }
 
   async uploadImageToCloudinary(file: Express.Multer.File): Promise<string> {
     return new Promise((resolve, reject) => {

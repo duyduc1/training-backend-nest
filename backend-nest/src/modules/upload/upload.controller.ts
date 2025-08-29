@@ -1,5 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ParseIntPipe, Put, Query } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { 
+  Controller, 
+  Get, 
+  Post, 
+  Body,  
+  Param, 
+  Delete, 
+  UseInterceptors, 
+  UploadedFiles, 
+  UploadedFile, 
+  ParseFilePipe, 
+  ParseIntPipe, 
+  Put, 
+  Query, 
+  MaxFileSizeValidator, 
+  FileTypeValidator 
+} from '@nestjs/common';
+import { FileInterceptor, FilesInterceptor} from '@nestjs/platform-express';
 import { UploadService } from './upload.service';
 import { CreateUploadDto } from './dto/create-upload.dto';
 import { UpdateUploadDto } from './dto/update-upload.dto';
@@ -7,6 +23,38 @@ import { UpdateUploadDto } from './dto/update-upload.dto';
 @Controller('upload')
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
+
+  @Post('singles3')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadSingleFile(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 5}),
+          new FileTypeValidator({ fileType: '.(png|jpeg|jpg|pdf)' }),
+        ],
+      }),
+    )
+    file: Express.Multer.File
+  ) {
+    return this.uploadService.uploadFileS3(file);
+  }
+
+  @Post('multiples3')
+  @UseInterceptors(FilesInterceptor('files', 10))
+  async uploadMultipleFiles(
+    @UploadedFiles(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 5}),
+          new FileTypeValidator({ fileType: '.(png|jpeg|jpg)' }),
+        ],
+      }),
+    )
+    files: Array<Express.Multer.File>
+  ) {
+    return this.uploadService.uploadFiles(files);
+  }
 
   @Post()
   @UseInterceptors(FileInterceptor('image'))
@@ -50,4 +98,6 @@ export class UploadController {
   async softDeleteFile(@Param('id') id: number) {
     return await this.softDeleteFile(id);
   }
+
+
 }
