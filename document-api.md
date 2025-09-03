@@ -322,29 +322,29 @@ file	        	    File                ảnh upload (Cloudinary sẽ lưu)
 ``` json
 {
   "id": 1,                       
-  "NameUpload": "Tên file/dữ liệu bạn gửi trong DTO",
-  "Description": "Mô tả (nếu có trong DTO, có thể null)",
-  "ImageUrl": "https://res.cloudinary.com/.../abc.jpg"  
+  "nameUpload": "Tên file/dữ liệu bạn gửi trong DTO",
+  "description": "Mô tả (nếu có trong DTO, có thể null)",
+  "imageUrl": "https://res.cloudinary.com/.../abc.jpg"  
 }
 ```
 
 ## 4.2 Get All Files
-### Endpoint: GET /api/v1/upload
+### Endpoint: GET /api/v1/upload?page=1&limit=10&search=Ảnh đại diện
 ### Response (200 OK)
 
 ``` json 
 [
   {
     "id": 1,
-    "NameUpload": "profile_pic",
-    "Description": "Ảnh đại diện",
-    "ImageUrl": "https://res.cloudinary.com/.../pic1.jpg"
+    "nameUpload": "profile_pic",
+    "description": "Ảnh đại diện",
+    "imageUrl": "https://res.cloudinary.com/.../pic1.jpg"
   },
   {
     "id": 2,
-    "NameUpload": "document",
-    "Description": null,
-    "ImageUrl": "https://res.cloudinary.com/.../doc1.pdf"
+    "nameUpload": "document",
+    "description": null,
+    "imageUrl": "https://res.cloudinary.com/.../doc1.pdf"
   }
 ]
 ```
@@ -366,8 +366,8 @@ file	        	    File                ảnh upload (Cloudinary sẽ lưu)
 ### Request Body (JSON)
 ``` json
 {
-  "NameUpload": "profile_pic_updated",
-  "Description": "Cập nhật ảnh đại diện"
+  "nameUpload": "profile_pic_updated",
+  "description": "Cập nhật ảnh đại diện"
 }
 ```
 
@@ -375,8 +375,8 @@ file	        	    File                ảnh upload (Cloudinary sẽ lưu)
 ``` json
 {
   "id": 1,
-  "NameUpload": "profile_pic_updated",
-  "Description": "Ảnh đại diện mới",
+  "nameUpload": "profile_pic_updated",
+  "description": "Ảnh đại diện mới",
   "ImageUrl": "https://res.cloudinary.com/.../new_avatar.png"
 }
 ```
@@ -387,9 +387,9 @@ file	        	    File                ảnh upload (Cloudinary sẽ lưu)
 ``` json
 {
   "id": 5,
-  "NameUpload": "old_avatar",
-  "Description": "Ảnh cũ",
-  "ImageUrl": "https://res.cloudinary.com/.../old.png"
+  "nameUpload": "old_avatar",
+  "description": "Ảnh cũ",
+  "imageUrl": "https://res.cloudinary.com/.../old.png"
 }
 ```
 
@@ -498,22 +498,22 @@ Value: sample.xlsx
 # 6. API CURD có kết nối Database MySQL
 
 ## 6.1 Lấy danh sách sản phẩm
-### Endpoint: GET /api/v1/products
+### Endpoint: GET /api/v1/products?page=1&limit=10&search=iPhone 15
 ### Response 200 (OK)
 
 ``` json
 [
   {
     "id": 1,
-    "ProductName": "iPhone 15",
-    "Price": 2500,
-    "Description": "Apple smartphone"
+    "productName": "iPhone 15",
+    "price": 2500,
+    "description": "Apple smartphone"
   },
   {
     "id": 2,
-    "ProductName": "MacBook Pro",
-    "Price": 3200,
-    "Description": "Apple laptop"
+    "productName": "MacBook Pro",
+    "price": 3200,
+    "pescription": "Apple laptop"
   }
 ]
 ```
