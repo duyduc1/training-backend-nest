@@ -13,6 +13,7 @@ import databaseConfig from './config/database.config';
 import s3Config from './config/s3.config';
 import { RegisConfigService } from './config/redis.config';
 import { CacheModule } from '@nestjs/cache-manager';
+import { ChatModule } from './chat/chat.module';
 
 
 @Module({
@@ -41,7 +42,9 @@ import { CacheModule } from '@nestjs/cache-manager';
     AuthModule,
     UsersModule,
     ExcelModule,
-    UploadModule
+    UploadModule,
+    ChatModule,
+    
   ],
   controllers: [AppController],
   providers: [AppService],
