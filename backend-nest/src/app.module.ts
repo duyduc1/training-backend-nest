@@ -11,6 +11,9 @@ import { UploadModule } from './modules/upload/upload.module';
 import { CloudinaryModule } from './shared/cloudinary/cloudinary.module';
 import databaseConfig from './config/database.config';
 import s3Config from './config/s3.config';
+import { RegisConfigService } from './config/redis.config';
+import { CacheModule } from '@nestjs/cache-manager';
+
 
 @Module({
   imports: [
@@ -18,6 +21,12 @@ import s3Config from './config/s3.config';
       isGlobal: true,
       envFilePath: '.env',
       load: [databaseConfig, s3Config], 
+    }),
+
+    CacheModule.registerAsync({
+      isGlobal: true,
+      imports: [ConfigModule],
+      useClass: RegisConfigService,
     }),
 
     TypeOrmModule.forRootAsync({

@@ -4,12 +4,14 @@ import {
   PrimaryGeneratedColumn, 
   CreateDateColumn, 
   UpdateDateColumn, 
-  DeleteDateColumn 
+  DeleteDateColumn, 
+  Index
 } from 'typeorm';
 
 @Entity({ name: 'products' })
 export class Product {
   @PrimaryGeneratedColumn()
+  @Index()
   id: number;
 
   @Column({ name: 'product_name' })

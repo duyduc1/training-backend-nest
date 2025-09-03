@@ -4,12 +4,14 @@ import {
   PrimaryGeneratedColumn, 
   CreateDateColumn, 
   UpdateDateColumn, 
-  DeleteDateColumn 
+  DeleteDateColumn, 
+  Index
 } from 'typeorm';
 
 @Entity({ name: 'uploads' })
 export class Upload {
   @PrimaryGeneratedColumn()
+  @Index()
   id: number;
 
   @Column()

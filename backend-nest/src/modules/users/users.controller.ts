@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, Put, UseInterceptors } from '@nestjs/common';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -13,6 +14,8 @@ export class UsersController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
   @Get()
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(60000)
   async findAll(
     @Query('page') page?: number,
     @Query('limit') limit?: number,
@@ -25,6 +28,8 @@ export class UsersController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
   @Get(':id')
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(60000)
   async findOne(@Param('id') id: number) {
     return await this.usersService.findOne(id);
   }

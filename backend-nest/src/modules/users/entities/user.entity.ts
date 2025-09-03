@@ -1,10 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, Index } from "typeorm";
 import { Role } from "src/enum/role.enum";
 import { Exclude } from 'class-transformer';
 
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
+    @Index()
     id: number;
 
     @Column()

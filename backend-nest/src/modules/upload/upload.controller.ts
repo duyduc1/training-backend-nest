@@ -16,6 +16,7 @@ import {
   FileTypeValidator 
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor} from '@nestjs/platform-express';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import { UploadService } from './upload.service';
 import { CreateUploadDto } from './dto/create-upload.dto';
 import { UpdateUploadDto } from './dto/update-upload.dto';
@@ -23,6 +24,19 @@ import { UpdateUploadDto } from './dto/update-upload.dto';
 @Controller('upload')
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
+
+  @Post('generate-presigned-url')
+  async getPresignedUrl(@Body() body: { fileName: string; fileType: string }) {
+    const { fileName, fileType } = body;
+    return this.uploadService.generatePresignedUrl(fileName, fileType);
+  }
+
+  @Post('confirm-upload')
+  async confirmUpload(@Body() body: { key: string, nameUpload: string, description: string }) {
+    const { key, nameUpload, description } = body;
+    const createUploadDto: CreateUploadDto = { nameUpload, description };
+    return this.uploadService.confirmUploadToS3(key, createUploadDto);
+  }
 
   @Post('singles3')
   @UseInterceptors(FileInterceptor('file'))
@@ -66,6 +80,8 @@ export class UploadController {
   }
 
   @Get()
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(60000)
   async findAll(
     @Query('page') page?: number,
     @Query('limit') limit?: number,
@@ -75,6 +91,8 @@ export class UploadController {
   }
 
   @Get(':id')
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(60000)
   async findOne(@Param('id', ParseIntPipe) id: number) {
     return await this.uploadService.findOne(id);
   }

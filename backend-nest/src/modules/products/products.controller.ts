@@ -1,6 +1,6 @@
 import { 
   Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Put, UseGuards, 
-  Query
+  Query, UseInterceptors
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -9,6 +9,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from 'src/guard/roles.guard'
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/enum/role.enum';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 
 @Controller('products')
 export class ProductsController {
@@ -22,6 +23,8 @@ export class ProductsController {
   }
 
   @Get()
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(60000)
   async findAllProducts(
     @Query('page') page?: number,
     @Query('limit') limit?: number,
@@ -31,6 +34,8 @@ export class ProductsController {
   }
 
   @Get(':id')
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(60000)
   async findProductById(@Param('id', ParseIntPipe) id: number) {
     return await this.productsService.findOne(id);
   }

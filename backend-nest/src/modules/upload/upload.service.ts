@@ -10,6 +10,7 @@ import { ConfigService } from '@nestjs/config';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { S3_CLIENT } from 'src/shared/s3/s3.provider';
 import { v4 as uuidv4 } from 'uuid';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 @Injectable()
 export class UploadService {
@@ -29,6 +30,36 @@ export class UploadService {
     }
     this.bucketName = bucket;
   }
+
+  async generatePresignedUrl(originalFileName: string, fileType:string): Promise<{ presignedUrl: string; key: string }> {
+    this.logger.log(`Generating presigned URL for file: ${originalFileName}`);
+
+    const key = `${uuidv4()}-${originalFileName}`;
+
+    const command = new PutObjectCommand({
+      Bucket: this.bucketName,
+      Key: key,
+      ContentType: fileType,
+    });
+
+    const presignedUrl = await getSignedUrl(this.s3Client, command, { expiresIn: 3600 });
+
+    return { presignedUrl, key };
+  }
+
+  async confirmUploadToS3(key: string, createUploadDto: CreateUploadDto): Promise<Upload> {
+    const region = await this.s3Client.config.region();
+
+    const imageUrl = `https://${this.bucketName}.s3.${region}.amazonaws.com/${key}`;
+
+    const newFile = this.uploadRepository.create({
+      ...createUploadDto,
+      imageUrl: imageUrl,
+    });
+
+    return this.uploadRepository.save(newFile);
+  }
+
   async uploadFileS3(file: Express.Multer.File): Promise<{ url: string }> {
     const fileName = `${uuidv4()}-${file.originalname}`;
     
@@ -96,12 +127,11 @@ export class UploadService {
     const qb = this.uploadRepository.createQueryBuilder('uploads');
 
     if (search) {
-      qb.andWhere('(uploads.nameUpload LIKE :search OR uploads.description:search)', {
+      qb.andWhere('(uploads.nameUpload LIKE :search OR uploads.description :search)', {
         search: `%${search}%`
       })
     }
 
-    
     qb.skip((page - 1) * limit).take(limit);
 
     qb.orderBy('uploads.createdAt', 'DESC');
